@@ -4,18 +4,92 @@
 <meta charset="UTF-8">
 <title>Radio Control Panel</title>
 <style>
-body { font-family: sans-serif; text-align: center; padding: 40px; background: #f5f5f5; }
-button { margin: 10px; padding: 10px 20px; font-size: 16px; cursor: pointer; }
-#screenshot { margin-top: 20px; max-width: 90%; border: 1px solid #ccc; }
+/* ───────── General Reset & Body ───────── */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+    padding: 40px 20px;
+}
+
+/* ───────── Header ───────── */
+h1 {
+    font-size: 2.8rem;
+    margin-bottom: 30px;
+    text-shadow: 2px 2px 8px rgba(0,0,0,0.3);
+}
+
+/* ───────── Buttons ───────── */
+button {
+    margin: 10px;
+    padding: 12px 28px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 6px 12px rgba(0,0,0,0.2);
+}
+
+#playBtn { background: #28a745; }
+#playBtn:hover { background: #218838; transform: translateY(-2px); }
+
+#stopBtn { background: #dc3545; }
+#stopBtn:hover { background: #c82333; transform: translateY(-2px); }
+
+#screenshotBtn { background: #ffc107; color: #000; }
+#screenshotBtn:hover { background: #e0a800; transform: translateY(-2px); }
+
+/* ───────── Screenshot Card ───────── */
+#screenshot {
+    margin-top: 30px;
+    max-width: 90%;
+    max-height: 450px;
+    border-radius: 16px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+    border: 3px solid rgba(255,255,255,0.4);
+    transition: transform 0.3s ease;
+}
+#screenshot:hover {
+    transform: scale(1.02);
+}
+
+/* ───────── Container Card ───────── */
+.container {
+    background: rgba(255, 255, 255, 0.05);
+    padding: 30px 40px;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+    text-align: center;
+    width: 100%;
+    max-width: 600px;
+}
+
+/* ───────── Footer ───────── */
+footer {
+    margin-top: 40px;
+    font-size: 0.9rem;
+    color: rgba(255,255,255,0.7);
+}
 </style>
 </head>
 <body>
-<h1>Radio Control Panel</h1>
-<button id="playBtn">Play</button>
-<button id="stopBtn">Stop</button>
-<button id="screenshotBtn">Screenshot</button>
-<br>
-<img id="screenshot" src="" alt="Latest Screenshot">
+<div class="container">
+    <h1>🎵 Radio Control Panel</h1>
+    <button id="playBtn">▶ Play</button>
+    <button id="stopBtn">⏹ Stop</button>
+    <button id="screenshotBtn">📸 Screenshot</button>
+    <br>
+    <img id="screenshot" src="" alt="Latest Screenshot">
+</div>
+
+<footer>Powered by RadioEarn • Live Control Panel</footer>
 
 <script>
 const playBtn = document.getElementById("playBtn");
