@@ -8,19 +8,21 @@ import os
 UID = "1098013"
 TARGET_URL = f"https://radioearn.com/radio/1/?uid={UID}"
 SCREENSHOT_DELAY = 10
-PORT = int(os.environ.get("PORT", 10000))
+PORT = int(os.environ.get("PORT", 10000))  # Render sets PORT automatically
 
 # ───────── LOGGING ─────────
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s [%(levelname)s] %(message)s",
 )
-logger = logging.getLogger("RadioListener")
+logger = logging.getLogger("RadioBot")
 
+# ───────── GLOBAL BROWSER PAGE ─────────
 browser_page = None
 
 # ───────── HELPERS ─────────
 async def click_if_exists(selector):
+    """Click a selector if it exists"""
     if not browser_page:
         return False
     el = await browser_page.query_selector(selector)
@@ -29,7 +31,7 @@ async def click_if_exists(selector):
         return True
     return False
 
-# ───────── API ROUTES ─────────
+# ───────── API HANDLERS ─────────
 async def health_handler(request):
     return web.Response(text="OK")
 
@@ -69,10 +71,10 @@ async def main_bot():
                 await asyncio.sleep(60)
 
             except Exception as e:
-                logger.error(f"Error: {e}")
+                logger.error(f"Error in bot: {e}")
                 await asyncio.sleep(10)
 
-# ───────── MAIN ─────────
+# ───────── MAIN SERVER ─────────
 async def main():
     app = web.Application()
     app.add_routes([
