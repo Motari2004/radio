@@ -1,56 +1,45 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>Radio Controller</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #0f172a;
-      color: white;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 30px;
-    }
-    button {
-      padding: 12px 20px;
-      margin: 8px;
-      font-size: 16px;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-    }
-    .play { background: #22c55e; }
-    .stop { background: #ef4444; }
-    img {
-      margin-top: 20px;
-      max-width: 820px;
-      border-radius: 10px;
-    }
-  </style>
+<meta charset="UTF-8">
+<title>Radio Control Panel</title>
+<style>
+body { font-family: sans-serif; text-align: center; padding: 40px; background: #f5f5f5; }
+button { margin: 10px; padding: 10px 20px; font-size: 16px; cursor: pointer; }
+#screenshot { margin-top: 20px; max-width: 90%; border: 1px solid #ccc; }
+</style>
 </head>
 <body>
+<h1>Radio Control Panel</h1>
+<button id="playBtn">Play</button>
+<button id="stopBtn">Stop</button>
+<button id="screenshotBtn">Screenshot</button>
+<br>
+<img id="screenshot" src="" alt="Latest Screenshot">
 
-  <h2>🎧 RadioEarn Player</h2>
+<script>
+const playBtn = document.getElementById("playBtn");
+const stopBtn = document.getElementById("stopBtn");
+const screenshotBtn = document.getElementById("screenshotBtn");
+const screenshotImg = document.getElementById("screenshot");
 
-  <div>
-    <button class="play" onclick="send('/play')">▶ Play</button>
-    <button class="stop" onclick="send('/stop')">⏹ Stop</button>
-  </div>
+playBtn.onclick = async () => {
+  const res = await fetch("/play", { method: "POST" });
+  const data = await res.json();
+  alert("Play: " + data.status);
+};
 
-  <img id="screen" src="/screenshot" />
+stopBtn.onclick = async () => {
+  const res = await fetch("/stop", { method: "POST" });
+  const data = await res.json();
+  alert("Stop: " + data.status);
+};
 
-  <script>
-    function send(endpoint) {
-      fetch(endpoint, { method: "POST" });
-    }
-
-    setInterval(() => {
-      document.getElementById("screen").src =
-        "/screenshot?" + Date.now();
-    }, 5000);
-  </script>
-
+screenshotBtn.onclick = async () => {
+  const res = await fetch("/screenshot");
+  const blob = await res.blob();
+  screenshotImg.src = URL.createObjectURL(blob);
+};
+</script>
 </body>
 </html>
