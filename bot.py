@@ -19,7 +19,6 @@ logger = logging.getLogger("RadioListener")
 
 browser_page = None
 
-<<<<<<< HEAD
 # ───────── HELPERS ─────────
 async def click_if_exists(selector):
     if not browser_page:
@@ -33,27 +32,6 @@ async def click_if_exists(selector):
 # ───────── API ROUTES ─────────
 async def health_handler(request):
     return web.Response(text="OK")
-=======
-<<<<<<< HEAD
-# ───────── HTTP ENDPOINTS ─────────
-async def health_handler(request):
-    return web.Response(text="OK", status=200)
-=======
-# ───────── HELPERS ─────────
-async def click_if_exists(selector):
-    if not browser_page:
-        return False
-    el = await browser_page.query_selector(selector)
-    if el:
-        await el.click()
-        return True
-    return False
-
-# ───────── API ROUTES ─────────
-async def health_handler(request):
-    return web.Response(text="OK")
->>>>>>> a2d07a1 (Describe what you changed here)
->>>>>>> 509aebd (Describe what you changed here)
 
 async def screenshot_handler(request):
     if not browser_page:
@@ -84,40 +62,11 @@ async def main_bot():
         while True:
             try:
                 logger.info("Opening RadioEarn page...")
-<<<<<<< HEAD
                 await page.goto(TARGET_URL, timeout=90000)
                 await page.wait_for_selector("#rearn", timeout=30000)
 
                 logger.info("Radio player detected")
                 await asyncio.sleep(60)
-=======
-<<<<<<< HEAD
-                await page.goto(TARGET_URL, wait_until="domcontentloaded", timeout=90000)
-
-=======
-                await page.goto(TARGET_URL, timeout=90000)
->>>>>>> a2d07a1 (Describe what you changed here)
-                await page.wait_for_selector("#rearn", timeout=30000)
-
-<<<<<<< HEAD
-                await asyncio.sleep(SCREENSHOT_DELAY)
-                screenshot_bytes = await page.screenshot()
-                with open("latest_screenshot.png", "wb") as f:
-                    f.write(screenshot_bytes)
-                logger.info("Screenshot saved after 10s")
-
-                while True:
-                    exists = await page.query_selector("#rearn")
-                    if not exists:
-                        logger.warning("Radio player missing, reloading page...")
-                        break
-                    logger.info("Still alive, waiting 60s...")
-                    await asyncio.sleep(60)
-=======
-                logger.info("Radio player detected")
-                await asyncio.sleep(60)
->>>>>>> a2d07a1 (Describe what you changed here)
->>>>>>> 509aebd (Describe what you changed here)
 
             except Exception as e:
                 logger.error(f"Error: {e}")
@@ -127,25 +76,11 @@ async def main_bot():
 async def main():
     app = web.Application()
     app.add_routes([
-<<<<<<< HEAD
         web.get("/", index_handler),
         web.get("/health", health_handler),
         web.get("/screenshot", screenshot_handler),
         web.post("/play", play_handler),
         web.post("/stop", stop_handler),
-=======
-<<<<<<< HEAD
-        web.get("/", health_handler),
-        web.get("/health", health_handler),
-        web.get("/screenshot", screenshot_handler)
-=======
-        web.get("/", index_handler),
-        web.get("/health", health_handler),
-        web.get("/screenshot", screenshot_handler),
-        web.post("/play", play_handler),
-        web.post("/stop", stop_handler),
->>>>>>> a2d07a1 (Describe what you changed here)
->>>>>>> 509aebd (Describe what you changed here)
     ])
 
     runner = web.AppRunner(app)
@@ -153,15 +88,7 @@ async def main():
     site = web.TCPSite(runner, "0.0.0.0", PORT)
     await site.start()
 
-<<<<<<< HEAD
     logger.info(f"Server running on http://localhost:{PORT}")
-=======
-<<<<<<< HEAD
-    logger.info(f"HTTP server running on port {PORT}")
-=======
-    logger.info(f"Server running on http://localhost:{PORT}")
->>>>>>> a2d07a1 (Describe what you changed here)
->>>>>>> 509aebd (Describe what you changed here)
     await main_bot()
 
 if __name__ == "__main__":
