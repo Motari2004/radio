@@ -1,34 +1,70 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Radio Control</title>
+    <meta charset="UTF-8">
+    <title>RadioEarn Monitor</title>
     <style>
-        body { background: #1a1a1a; color: #eee; font-family: sans-serif; text-align: center; }
-        img { width: 90%; max-width: 800px; border: 3px solid #444; margin: 20px; }
-        button { padding: 15px 30px; font-size: 18px; margin: 10px; cursor: pointer; border-radius: 5px; border: none; }
-        .play { background: #28a745; color: white; }
-        .stop { background: #dc3545; color: white; }
+        body { background: #121212; color: #00ff41; font-family: 'Courier New', monospace; text-align: center; margin: 0; padding: 20px; }
+        .monitor-box { 
+            position: relative; 
+            display: inline-block; 
+            border: 3px solid #333; 
+            background: #000;
+            margin-top: 10px;
+        }
+        #screen { width: 100%; max-width: 850px; height: auto; display: block; }
+        .controls { margin: 20px; }
+        button { 
+            padding: 12px 25px; cursor: pointer; margin: 5px; background: #1a1a1a; 
+            color: #00ff41; border: 1px solid #00ff41; font-weight: bold;
+        }
+        button:hover { background: #00ff41; color: #000; }
+        #status { font-size: 12px; color: #666; margin-top: 10px; }
     </style>
 </head>
 <body>
-    <h1>Radio Listener Dashboard</h1>
-    <div>
-        <button class="play" onclick="cmd('play')">START RADIO</button>
-        <button class="stop" onclick="cmd('stop')">STOP RADIO</button>
+    <h2>RADIOEARN REMOTE TERMINAL</h2>
+    
+    <div class="controls">
+        <button onclick="cmd('play')">FORCE PLAY</button>
+        <button onclick="cmd('stop')">FORCE STOP</button>
     </div>
-    <img id="view" src="/screenshot" onclick="refresh()">
-    <p>Click image to manually refresh view</p>
+
+    <div class="monitor-box">
+        <img id="screen" src="/screenshot" alt="Waiting for feed...">
+    </div>
+
+    <div id="status">Syncing with remote browser...</div>
 
     <script>
-        function cmd(type) {
-            fetch('/' + type, {method: 'POST'})
-            .then(r => r.json())
-            .then(d => console.log(d));
+        const screen = document.getElementById('screen');
+        const status = document.getElementById('status');
+
+        function updateFrame() {
+            // Create a temporary image in memory
+            const buffer = new Image();
+            const url = "/screenshot?cache=" + Date.now();
+            buffer.src = url;
+
+            // Only swap the image once the download is actually finished
+            buffer.onload = () => {
+                screen.src = url;
+                status.innerText = "Feed Updated: " + new Date().toLocaleTimeString();
+            };
         }
-        function refresh() {
-            document.getElementById('view').src = '/screenshot?t=' + Date.now();
+
+        function cmd(action) {
+            status.innerText = "Sending " + action + "...";
+            fetch('/' + action, {method: 'POST'})
+                .then(r => r.json())
+                .then(d => {
+                    status.innerText = "Action " + action + ": " + d.status;
+                    setTimeout(updateFrame, 1000); // Quick refresh after command
+                });
         }
-        setInterval(refresh, 15000);
+
+        // Refresh every 3 seconds for a smooth experience
+        setInterval(updateFrame, 3000);
     </script>
 </body>
 </html>
