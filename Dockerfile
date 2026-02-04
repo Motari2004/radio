@@ -6,14 +6,13 @@ WORKDIR /app
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy project files
-COPY . .
+# Force install the specific browsers for this playwright version
+RUN playwright install chromium
+RUN playwright install-deps chromium
 
-# Ensure the static folder exists
+COPY . .
 RUN mkdir -p static
 
-# Expose port (Render uses 10000 by default)
 EXPOSE 10000
 
-# Start the application
 CMD ["python", "app.py"]
