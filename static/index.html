@@ -1,71 +1,38 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>Radio Control Panel</title>
-<style>
-    body {
-        font-family: 'Segoe UI', sans-serif;
-        text-align: center;
-        padding: 40px;
-        background: linear-gradient(135deg, #667eea, #764ba2);
-        color: #fff;
-    }
-    h1 { margin-bottom: 30px; font-size: 36px; }
-    button {
-        margin: 10px;
-        padding: 12px 28px;
-        font-size: 18px;
-        font-weight: bold;
-        border: none;
-        border-radius: 8px;
-        cursor: pointer;
-        color: #fff;
-        background: #ff6b6b;
-        transition: 0.3s;
-    }
-    button:hover {
-        background: #ff4757;
-    }
-    #screenshot {
-        margin-top: 30px;
-        max-width: 90%;
-        border: 2px solid #fff;
-        border-radius: 12px;
-    }
-</style>
+    <meta charset="UTF-8">
+    <title>RadioEarn Controller</title>
+    <style>
+        body { font-family: sans-serif; text-align: center; background: #121212; color: white; }
+        .container { margin-top: 50px; }
+        img { border: 2px solid #333; max-width: 80%; margin: 20px 0; }
+        .controls { margin-bottom: 20px; }
+        button { padding: 10px 20px; font-size: 16px; cursor: pointer; margin: 5px; }
+    </style>
 </head>
 <body>
-<h1>🎵 Radio Control Panel</h1>
-<button id="playBtn">▶️ Play</button>
-<button id="stopBtn">⏹ Stop</button>
-<button id="screenshotBtn">📸 Screenshot</button>
-<br>
-<img id="screenshot" src="" alt="Latest Screenshot">
+    <div class="container">
+        <h1>Radio Control Center</h1>
+        <div class="controls">
+            <button onclick="cmd('play')">▶ Play</button>
+            <button onclick="cmd('stop')">⏸ Stop</button>
+            <button onclick="refresh()">🔄 Refresh View</button>
+        </div>
+        <img id="screen" src="/screenshot" alt="Browser view">
+    </div>
 
-<script>
-const playBtn = document.getElementById("playBtn");
-const stopBtn = document.getElementById("stopBtn");
-const screenshotBtn = document.getElementById("screenshotBtn");
-const screenshotImg = document.getElementById("screenshot");
-
-playBtn.onclick = async () => {
-    const res = await fetch("/play", { method: "POST" });
-    const data = await res.json();
-    alert("Play: " + data.status);
-};
-
-stopBtn.onclick = async () => {
-    const res = await fetch("/stop", { method: "POST" });
-    const data = await res.json();
-    alert("Stop: " + data.status);
-};
-
-screenshotBtn.onclick = async () => {
-    const res = await fetch("/screenshot");
-    const blob = await res.blob();
-    screenshotImg.src = URL.createObjectURL(blob);
-};
-</script>
+    <script>
+        function cmd(action) {
+            fetch('/' + action, { method: 'POST' })
+                .then(r => r.json())
+                .then(data => alert("Status: " + data.status));
+        }
+        function refresh() {
+            document.getElementById('screen').src = '/screenshot?t=' + new Date().getTime();
+        }
+        // Auto-refresh screenshot every 10 seconds
+        setInterval(refresh, 10000);
+    </script>
 </body>
 </html>
